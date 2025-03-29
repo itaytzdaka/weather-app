@@ -1,0 +1,23 @@
+# Dependencies (Docker installs them separately)
+client/node_modules/
+
+# Ignore sensitive environment files
+client/.env
+
+# Git files (not needed in the image)
+client/.git/
+client/.gitignore
+
+
+# Ignore React build output (Docker will generate it)
+client/build/
+
+
+
+# Node.js dependencies (Docker installs them separately)
+server/node_modules/
+server/_front-end
+
+# Git files (not needed in the image)
+server/.git/
+server/.gitignore

@@ -1,0 +1,54 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root{
+  /* padding: 50px 50px; */
+  height: 100vh;
+  background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(32,32,157,1) 35%, rgba(0,212,255,1) 100%);
+  font-family: 'Heebo', sans-serif;
+  color: rgb(181, 194, 211);
+}
+
+
+/* from 1023px to 1200px */
+@media only screen and (max-width: 1200px) {
+  :root {
+    font-size: 0.9rem;
+  }
+}
+
+/* from 767px to 1023px */
+@media only screen and (max-width: 1023px) {
+  :root {
+    font-size: 0.7rem;
+  }
+
+
+}
+
+/* from 520px to 767px */
+@media only screen and (max-width: 767px) {
+  html, body, #root{
+    height: auto;
+  }
+}
+
+/* up to 620px */
+@media only screen and (max-width: 620px) {
+
+}
+
+/* up to 480px */
+@media only screen and (max-width: 480px) {
+
+}
+
+@media only screen and (max-width: 310px) {
+  :root {
+    font-size: 0.5rem;
+  }
+}
+
