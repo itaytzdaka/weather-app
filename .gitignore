@@ -7,3 +7,10 @@ client/.gitignore
 server/node_modules
 server/_front-end
 server/.env
+
+docker-compose.yml
+Dockerfile.nginx
+Dockerfile.node
+entrypoint.sh
+nginx.template.conf
+.dockerignore
