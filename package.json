@@ -1,6 +1,9 @@
 {
     "name": "weather-app",
     "scripts": {
-    "heroku-postbuild": "cd client && npm install && npm run build && cp -r build ../server/_front-end"
+        "heroku-postbuild": "cd client && npm install && npm run build && cd ../server && npm install && cd .. && cp -r client/build server/_front-end"
     }
+
 }
+}
+
