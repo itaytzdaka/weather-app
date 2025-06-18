@@ -21,11 +21,11 @@ server.use(express.json());
 
 
 // for monolith
-// const path = require("path");
-// server.use(express.static(path.join(__dirname, "./_front-end")));
-// server.use("*", (request, response) => {
-//     response.sendFile(path.join(__dirname, "./_front-end/index.html"));
-// });
+const path = require("path");
+server.use(express.static(path.join(__dirname, "./_front-end")));
+server.use("*", (request, response) => {
+    response.sendFile(path.join(__dirname, "./_front-end/index.html"));
+});
 
 
 const port=process.env.PORT || 3000;
