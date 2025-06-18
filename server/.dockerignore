@@ -1,0 +1,7 @@
+# Node.js dependencies (Docker installs them separately)
+node_modules/
+_front-end
+
+# Git files (not needed in the image)
+.git
+.gitignore
