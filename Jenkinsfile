@@ -144,7 +144,6 @@ pipeline {
             }
         }
 
-
     //     stage("version") {
     //         when {
     //             anyOf {
@@ -201,30 +200,78 @@ pipeline {
     //         }
     //     }
 
+        stage("version") {
+            when {
+                anyOf {
+                    branch 'main'
+                }
+            } 
+            steps {
+                script {
 
-    //     stage("push") {
-    //         when {
-    //             anyOf {
-    //                 branch 'main'
-    //             }
-    //         }
-    //         steps {
-    //             script {
 
-    //                 withEnv(["DOCKER_REGISTRY=${ECR_REGISTRY}"]) {
-    //                     sh """
-    //                         aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin \$DOCKER_REGISTRY
+                    sh '''#!/bin/bash
+                    
+                        git config user.name "Jenkins"
+                        git config user.email "jenkins@example.com"
 
-    //                         docker tag todo-client \$DOCKER_REGISTRY/${ECR_REPOSITORY_CLIENT}:${env.VERSION_TAG}
-    //                         docker push \$DOCKER_REGISTRY/${ECR_REPOSITORY_CLIENT}:${env.VERSION_TAG}
+                        # Clean all local tags                                
+                        git tag -l | xargs -r git tag -d
 
-    //                         docker tag todo-server \$DOCKER_REGISTRY/${ECR_REPOSITORY_SERVER}:${env.VERSION_TAG}
-    //                         docker push \$DOCKER_REGISTRY/${ECR_REPOSITORY_SERVER}:${env.VERSION_TAG}
-    //                     """
-    //                 }
-    //             }
-    //         }
-    //     }
+                        # Fetch all tags
+                        git fetch --tags
+
+                        # Get latest tag
+                        latest_version=$(git tag --list '[0-9]*' --sort=-v:refname | head -n 1)
+
+                        if [ -z "$latest_version" ]; then
+                            echo "No existing tags found. Using default version: 1.0.0"
+                            new_version="1.0.0"
+                        else
+                            echo "Latest tag: $latest_version"
+                            version="$latest_version"
+                            IFS='.' read -r major minor patch <<< "$version"
+                            new_patch=$((patch + 1)) 
+                            new_version="${major}.${minor}.${new_patch}"
+                        fi
+
+                        echo "Set new version: $new_version"
+                        echo "$new_version" > .version
+                    '''
+
+                    def version = readFile('.version').trim()
+                    env.VERSION_TAG = version
+                    echo "VERSION_TAG set to ${env.VERSION_TAG}"
+                        
+                    
+                }
+            }
+        }
+
+
+        stage("push") {
+            when {
+                anyOf {
+                    branch 'main'
+                }
+            }
+            steps {
+                script {
+
+                    withEnv(["DOCKER_REGISTRY=${ECR_REGISTRY}"]) {
+                        sh """
+                            aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin \$DOCKER_REGISTRY
+
+                            docker tag todo-client \$DOCKER_REGISTRY/${ECR_REPOSITORY_CLIENT}:${env.VERSION_TAG}
+                            docker push \$DOCKER_REGISTRY/${ECR_REPOSITORY_CLIENT}:${env.VERSION_TAG}
+
+                            docker tag todo-server \$DOCKER_REGISTRY/${ECR_REPOSITORY_SERVER}:${env.VERSION_TAG}
+                            docker push \$DOCKER_REGISTRY/${ECR_REPOSITORY_SERVER}:${env.VERSION_TAG}
+                        """
+                    }
+                }
+            }
+        }
 
 
     //     stage('tag') {
