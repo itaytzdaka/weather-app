@@ -126,30 +126,20 @@ pipeline {
                     branch 'main'
                 }
             } 
-            // steps {
-            //     script {
-            //         parallel(
-            //             client: {
-            //                 dir('client') {
-            //                     sh 'docker build -t weather-client .'
-            //                 }
-            //             },
-            //             server: {
-            //                 dir('server') {
-            //                     sh 'docker build -t weather-server .'
-            //                 }
-            //             }
-            //         )
-            //     }
-            // }
-            
             steps {
-                dir('client') {
-                    sh 'docker build -t weather-client .'
-                }
-
-                dir('server') {
-                    sh 'docker build -t weather-server .'
+                script {
+                    parallel(
+                        client: {
+                            dir('client') {
+                                sh 'docker build -t weather-client .'
+                            }
+                        },
+                        server: {
+                            dir('server') {
+                                sh 'docker build -t weather-server .'
+                            }
+                        }
+                    )
                 }
             }
         }
