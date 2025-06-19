@@ -45,23 +45,23 @@ pipeline {
     //         }
     //     }
 
-    //     stage("Install dependencies") {
-    //         when {
-    //             anyOf {
-    //                 branch 'main'
-    //                 expression { env.BRANCH_NAME.startsWith("feature/") }
-    //             }
-    //         } 
-    //         steps {
-    //             dir('server') {
-    //                 sh '''
-    //                     python3 -m venv venv
-    //                     . venv/bin/activate
-    //                     pip install --no-cache-dir -r requirements-dev.txt
-    //                 '''
-    //             }
-    //         }
-    //     }
+        // stage("Install dependencies") {
+        //     when {
+        //         anyOf {
+        //             branch 'main'
+        //             expression { env.BRANCH_NAME.startsWith("feature/") }
+        //         }
+        //     } 
+        //     steps {
+        //         dir('server') {
+        //             sh '''
+        //                 python3 -m venv venv
+        //                 . venv/bin/activate
+        //                 pip install --no-cache-dir -r requirements-dev.txt
+        //             '''
+        //         }
+        //     }
+        // }
 
     //     stage('Unit Tests') {
     //         when {
@@ -120,29 +120,29 @@ pipeline {
     //         }
     //     }
 
-    //     stage("Build") {
-    //         when {
-    //             anyOf {
-    //                 branch 'main'
-    //             }
-    //         } 
-    //         steps {
-    //             script {
-    //                 parallel(
-    //                     client: {
-    //                         dir('client') {
-    //                             sh 'docker build -t todo-client .'
-    //                         }
-    //                     },
-    //                     server: {
-    //                         dir('server') {
-    //                             sh 'docker build -t todo-server .'
-    //                         }
-    //                     }
-    //                 )
-    //             }
-    //         }
-    //     }
+        stage("Build") {
+            when {
+                anyOf {
+                    branch 'main'
+                }
+            } 
+            steps {
+                script {
+                    parallel(
+                        client: {
+                            dir('client') {
+                                sh 'docker build -t weather-client .'
+                            }
+                        },
+                        server: {
+                            dir('server') {
+                                sh 'docker build -t weather-server .'
+                            }
+                        }
+                    )
+                }
+            }
+        }
 
 
     //     stage("version") {
