@@ -9,7 +9,7 @@ pipeline {
 
     environment {
 
-        // GITLAB_REPOSITORY_APP = "gitlab.com/itaytzdaka/weather-app.git"
+        GITHUB_REPOSITORY_APP = "github.com/itaytzdaka/weather-app.git"
         // GITLAB_REPOSITORY_GITOPS = "gitlab.com/itaytzdaka/gitops.git"
 
         ECR_REGISTRY = "054037125849.dkr.ecr.us-east-1.amazonaws.com"
@@ -144,62 +144,6 @@ pipeline {
             }
         }
 
-    //     stage("version") {
-    //         when {
-    //             anyOf {
-    //                 branch 'main'
-    //             }
-    //         } 
-    //         steps {
-    //             script {
-
-    //                 withCredentials([usernamePassword(
-    //                     credentialsId: 'jenkins-versions-gitlab',
-    //                     usernameVariable: 'GIT_USER',
-    //                     passwordVariable: 'GIT_PASSWORD'
-    //                 )]) {
-                        
-    //                     sh '''#!/bin/bash
-                        
-    //                         git config user.name "Jenkins"
-    //                         git config user.email "jenkins@example.com"
-
-    //                         REPO_URL="https://${GIT_USER}:${GIT_PASSWORD}@${GITLAB_REPOSITORY_APP}"
-    //                         git remote set-url origin "$REPO_URL"
-
-    //                         # Clean all local tags                                
-    //                         git tag -l | xargs -r git tag -d
-
-    //                         # Fetch all tags
-    //                         git fetch --tags
-
-    //                         # Get latest tag
-    //                         latest_version=$(git tag --list '[0-9]*' --sort=-v:refname | head -n 1)
-
-    //                         if [ -z "$latest_version" ]; then
-    //                             echo "No existing tags found. Using default version: 1.0.0"
-    //                             new_version="1.0.0"
-    //                         else
-    //                             echo "Latest tag: $latest_version"
-    //                             version="$latest_version"
-    //                             IFS='.' read -r major minor patch <<< "$version"
-    //                             new_patch=$((patch + 1)) 
-    //                             new_version="${major}.${minor}.${new_patch}"
-    //                         fi
-
-    //                         echo "Set new version: $new_version"
-    //                         echo "$new_version" > .version
-    //                     '''
-
-    //                     def version = readFile('.version').trim()
-    //                     env.VERSION_TAG = version
-    //                     echo "VERSION_TAG set to ${env.VERSION_TAG}"
-                        
-    //                 }
-    //             }
-    //         }
-    //     }
-
         stage("version") {
             when {
                 anyOf {
@@ -274,35 +218,62 @@ pipeline {
         }
 
 
-    //     stage('tag') {
-    //         when {
-    //             branch 'main'
-    //         } 
-    //         steps {
-    //             script {
-    //                     gitlabCommitStatus(name: 'Tag'){
-    //                         withCredentials([usernamePassword(
-    //                         credentialsId: 'jenkins-versions-gitlab',
-    //                         usernameVariable: 'GIT_USER',
-    //                         passwordVariable: 'GIT_PASSWORD'
-    //                     )]) {
+        // stage('tag') {
+        //     when {
+        //         branch 'main'
+        //     } 
+        //     steps {
+        //         script {
+        //                 gitlabCommitStatus(name: 'Tag'){
+        //                     withCredentials([usernamePassword(
+        //                     credentialsId: 'jenkins-versions-gitlab',
+        //                     usernameVariable: 'GIT_USER',
+        //                     passwordVariable: 'GIT_PASSWORD'
+        //                 )]) {
 
-    //                         sh '''#!/bin/bash
-    //                             git config user.name "Jenkins"
-    //                             git config user.email "jenkins@example.com"
+        //                     sh '''#!/bin/bash
+        //                         git config user.name "Jenkins"
+        //                         git config user.email "jenkins@example.com"
                                 
-    //                             REPO_URL="https://${GIT_USER}:${GIT_PASSWORD}@${GITLAB_REPOSITORY_APP}"
-    //                             git remote set-url origin "$REPO_URL"
+        //                         REPO_URL="https://${GIT_USER}:${GIT_PASSWORD}@${GITLAB_REPOSITORY_APP}"
+        //                         git remote set-url origin "$REPO_URL"
 
-    //                             echo "Creating tag: $VERSION_TAG"
-    //                             git tag "$VERSION_TAG"
-    //                             git push origin "$VERSION_TAG"
-    //                         '''
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
+        //                         echo "Creating tag: $VERSION_TAG"
+        //                         git tag "$VERSION_TAG"
+        //                         git push origin "$VERSION_TAG"
+        //                     '''
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage('tag') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    withCredentials([string(
+                        credentialsId: 'github-token',
+                        variable: 'GITHUB_TOKEN'
+                    )]) {
+                        sh '''#!/bin/bash
+                            git config user.name "Jenkins"
+                            git config user.email "jenkins@example.com"
+
+                            # Use the GitHub token to authenticate
+                            REPO_URL="https://${GITHUB_TOKEN}@${GITHUB_REPOSITORY_APP}"
+                            git remote set-url origin "$REPO_URL"
+
+                            echo "Creating tag: $VERSION_TAG"
+                            git tag "$VERSION_TAG"
+                            git push origin "$VERSION_TAG"
+                        '''
+                    }
+                }
+            }
+        }
 
 
 
