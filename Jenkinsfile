@@ -262,10 +262,10 @@ pipeline {
                         sh """
                             aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin \$DOCKER_REGISTRY
 
-                            docker tag todo-client \$DOCKER_REGISTRY/${ECR_REPOSITORY_CLIENT}:${env.VERSION_TAG}
+                            docker tag weather-client \$DOCKER_REGISTRY/${ECR_REPOSITORY_CLIENT}:${env.VERSION_TAG}
                             docker push \$DOCKER_REGISTRY/${ECR_REPOSITORY_CLIENT}:${env.VERSION_TAG}
 
-                            docker tag todo-server \$DOCKER_REGISTRY/${ECR_REPOSITORY_SERVER}:${env.VERSION_TAG}
+                            docker tag weather-server \$DOCKER_REGISTRY/${ECR_REPOSITORY_SERVER}:${env.VERSION_TAG}
                             docker push \$DOCKER_REGISTRY/${ECR_REPOSITORY_SERVER}:${env.VERSION_TAG}
                         """
                     }
