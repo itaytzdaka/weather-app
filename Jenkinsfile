@@ -134,7 +134,7 @@ pipeline {
 
                 dir('e2e') {
                     sh '''
-                        ./e2e-test.sh
+                        ./e2e-test.sh nginx
                     '''
                 }
 
