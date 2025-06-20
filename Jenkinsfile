@@ -138,10 +138,10 @@ pipeline {
                     '''
                 }
 
-                sh 'docker compose stop'
-                sh 'docker compose rm -f'
+                // sh 'docker compose stop'
+                // sh 'docker compose rm -f'
 
-                // sh 'docker compose down'
+                sh 'docker compose down'
             }
         }
 
@@ -376,9 +376,9 @@ pipeline {
 
         always { 
 
-            // sh '''
-            //     docker compose down -v || true
-            // '''
+            sh '''
+                docker compose down || true
+            '''
             
             cleanWs() 
         } 
