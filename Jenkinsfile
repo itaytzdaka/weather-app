@@ -44,66 +44,32 @@ pipeline {
     //         }
     //     }
 
-        // stage("Install dependencies") {
+
+        // // not necessary 
+        // stage("Build") {
         //     when {
         //         anyOf {
         //             branch 'main'
-        //             expression { env.BRANCH_NAME.startsWith("feature/") }
         //         }
         //     } 
         //     steps {
-        //         dir('server') {
-        //             sh '''
-        //                 python3 -m venv venv
-        //                 . venv/bin/activate
-        //                 pip install --no-cache-dir -r requirements-dev.txt
-        //             '''
+        //         script {
+        //             parallel(
+        //                 client: {
+        //                     dir('client') {
+        //                         sh 'docker build -t weather-client .'
+        //                     }
+        //                 },
+        //                 server: {
+        //                     dir('server') {
+        //                         sh 'docker build -t weather-server .'
+        //                     }
+        //                 }
+        //             )
         //         }
         //     }
         // }
 
-    //     stage('Unit Tests') {
-    //         when {
-    //             anyOf {
-    //                 branch 'main'
-    //                 expression { env.BRANCH_NAME.startsWith("feature/") }
-    //             }
-    //         } 
-    //         steps {
-    //             dir('server') {
-    //                 sh '''
-    //                     . venv/bin/activate
-    //                     PYTHONPATH=. pytest tests
-    //                 '''
-    //             }
-    //         }
-    //     }
-
-
-
-        stage("Build") {
-            when {
-                anyOf {
-                    branch 'main'
-                }
-            } 
-            steps {
-                script {
-                    parallel(
-                        client: {
-                            dir('client') {
-                                sh 'docker build -t weather-client .'
-                            }
-                        },
-                        server: {
-                            dir('server') {
-                                sh 'docker build -t weather-server .'
-                            }
-                        }
-                    )
-                }
-            }
-        }
 
         stage('E2E Tests') {
             when {
@@ -137,9 +103,6 @@ pipeline {
                         ./e2e-test.sh nginx
                     '''
                 }
-
-                // sh 'docker compose stop'
-                // sh 'docker compose rm -f'
 
                 sh 'docker compose down'
             }
@@ -247,52 +210,6 @@ pipeline {
         }
 
 
-
-    //     stage("Deploy") {
-    //         when {
-    //             anyOf {
-    //                 branch 'main'
-    //             }
-    //         }
-    //         steps {
-    //             script {
-
-    //                 withCredentials([usernamePassword(
-    //                     credentialsId: 'jenkins-versions-gitlab',
-    //                     usernameVariable: 'GIT_USER',
-    //                     passwordVariable: 'GIT_PASSWORD'
-    //                 )]) {
-                        
-    //                     sh '''#!/bin/bash
-
-    //                         REPO_URL="https://${GIT_USER}:${GIT_PASSWORD}@${GITLAB_REPOSITORY_GITOPS}"
-    //                         git remote set-url origin "$REPO_URL"
-
-    //                         # Clone the GitOps repo
-    //                         git clone --branch main "$REPO_URL" gitops-repo
-
-    //                         cd gitops-repo
-
-    //                         ls -la
-                            
-    //                         git config user.name "Jenkins"
-    //                         git config user.email "jenkins@example.com"
-
-    //                         # Update the image tag in values.yaml (example path)
-    //                         sed -i 's/^appVersion:.*$/appVersion: "'${VERSION_TAG}'"/' charts/application/Chart.yaml
-
-    //                         cat charts/application/Chart.yaml
-
-    //                         # Commit and push
-    //                         git add .
-    //                         git commit -m "Update application version to ${VERSION_TAG}"
-    //                         git push origin main
-    //                     '''
-    //                 }
-    //             }
-    //         }
-    //     }
-
         stage("Deploy") {
             when {
                 anyOf {
@@ -308,9 +225,9 @@ pipeline {
                         git config user.email "jenkins@example.com"
 
                         # Update the image tag in values.yaml (example path)
-                        sed -i 's/^appVersion:.*$/appVersion: "'${VERSION_TAG}'"/' charts/application/Chart.yaml
+                        sed -i 's/^appVersion:.*$/appVersion: "'${VERSION_TAG}'"/' gitops/charts/application/Chart.yaml
 
-                        cat charts/application/Chart.yaml
+                        cat gitops/charts/application/Chart.yaml
 
                         # Commit and push
                         git add .
@@ -322,46 +239,6 @@ pipeline {
             }
         }
 
-    // }
-
-    // post { 
-
-    //     failure {
-    //         echo "failure!"
-    //         mail to: "${COMMIT_AUTHOR_EMAIL}",
-    //             subject: "Build Failed - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-    //             body: """\
-    //                 Build failed
-
-    //                 Project: ${env.JOB_NAME}
-    //                 Build Number: #${env.BUILD_NUMBER}
-    //                 Build URL: ${env.BUILD_URL}
-
-    //                 Please check the logs for more details.
-    //             """
-    //     }
-
-    //     success {
-    //         echo "success!"
-    //         mail to: "${COMMIT_AUTHOR_EMAIL}",
-    //             subject: "Build Success - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-    //             body: """\
-    //                 Build succeeded
-
-    //                 Project: ${env.JOB_NAME}
-    //                 Build Number: #${env.BUILD_NUMBER}
-    //                 Build URL: ${env.BUILD_URL}/
-    //             """
-    //     }
-
-    //     always { 
-
-    //         sh '''
-    //             docker compose down -v || true
-    //         '''
-            
-    //         cleanWs() 
-    //     } 
     }
 
     post { 
