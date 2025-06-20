@@ -1,0 +1,128 @@
+# Default values for crm-chart.
+client:
+  replicaCount: 2
+
+  image:
+    repository: 793786247026.dkr.ecr.ap-south-1.amazonaws.com/itay/todo-client
+
+  service:
+    port: 80
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 20m
+      memory: 64Mi
+
+  startupProbe:
+    httpGet:
+      path: /api/health
+      port: 80
+    initialDelaySeconds: 0
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /api/healthz
+      port: 80
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3
+
+  livenessProbe:
+    httpGet:
+      path: /api/health
+      port: 80
+    initialDelaySeconds: 0
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+
+server:
+  replicaCount: 2
+
+  image:
+    repository: 793786247026.dkr.ecr.ap-south-1.amazonaws.com/itay/todo-server
+
+  service:
+    port: 5000
+
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 20m
+      memory: 64Mi
+
+
+  startupProbe:
+    httpGet:
+      path: /api/health
+      port: 5000
+    initialDelaySeconds: 0
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    httpGet:
+      path: /api/healthz
+      port: 5000
+    initialDelaySeconds: 0
+    periodSeconds: 5
+    timeoutSeconds: 5
+    successThreshold: 1
+    failureThreshold: 3
+
+  livenessProbe:
+    httpGet:
+      path: /api/health
+      port: 5000
+    initialDelaySeconds: 0
+    periodSeconds: 15
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+
+
+ingress:
+  enabled: true
+  annotations: 
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  className: nginx
+  hosts:
+    - host: itay-protfolio.ddns.net	
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: todos-client-service
+            port: 80
+        - path: /api
+          pathType: Prefix
+          service:
+            name: todos-server-service
+            port: 5000
+  tls:
+   - secretName: todos-tls 
+     hosts:
+       - itay-protfolio.ddns.net	
+
+clusterIssuer:
+  enabled: true
+  name: letsencrypt
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: itaytzdaka1@gmail.com
+    privateKeySecretRef: letsencrypt-key
+    ingressClass: nginx

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: server-deployment
+  labels:
+    app: server
+
+spec:
+  replicas: {{ .Values.server.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: server
+
+  template:
+
+    metadata:
+      labels:
+        app: server
+
+    spec:
+            
+      containers:
+        - name: server
+
+          
+          image: "{{ .Values.server.image.repository }}:{{ .Values.server.image.tag | default .Chart.AppVersion }}"
+
+          ports:
+            - containerPort: {{ .Values.server.service.port }}
+
+
+          {{- with .Values.server.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+
+          {{- with .Values.server.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          {{- with .Values.server.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          {{- with .Values.server.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          env:
+            - name: DB_PRIMARY_HOST
+              value: application-postgresql-primary
+            - name: DB_REPLICA_HOST
+              value: application-postgresql-read
+            - name: DB_NAME
+              value: {{ .Values.postgresql.auth.database }}
+            - name: DB_USER
+              value: {{ .Values.postgresql.auth.username }}
+            - name: DB_PASS
+              value: {{ .Values.postgresql.auth.password }}

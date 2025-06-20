@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: client-deployment
+  labels:
+    app: client
+
+spec:
+  replicas: {{ .Values.client.replicaCount }}
+
+  selector:
+    matchLabels:
+      app: client
+
+  template:
+
+    metadata:
+      labels:
+        app: client
+
+    spec:
+          
+      containers:
+        - name: client
+          
+          image: "{{ .Values.client.image.repository }}:{{ .Values.client.image.tag | default .Chart.AppVersion }}"
+
+          ports:
+            - containerPort: {{ .Values.client.service.port }}
+
+
+          {{- with .Values.client.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          {{- with .Values.client.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          {{- with .Values.client.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
+          {{- with .Values.client.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
