@@ -218,23 +218,27 @@ pipeline {
             }
             steps {
                 script {
-                        
-                    sh '''#!/bin/bash
 
-                        git config user.name "Jenkins"
-                        git config user.email "jenkins@example.com"
+                    withCredentials([string(
+                        credentialsId: 'github-token',
+                        variable: 'GITHUB_TOKEN'
+                    )]) {
+                        sh '''#!/bin/bash
 
-                        # Update the image tag in values.yaml (example path)
-                        sed -i 's/^appVersion:.*$/appVersion: "'${VERSION_TAG}'"/' gitops/charts/application/Chart.yaml
+                            git config user.name "Jenkins"
+                            git config user.email "jenkins@example.com"
 
-                        cat gitops/charts/application/Chart.yaml
+                            # Update the image tag in values.yaml (example path)
+                            sed -i 's/^appVersion:.*$/appVersion: "'${VERSION_TAG}'"/' gitops/charts/application/Chart.yaml
 
-                        # Commit and push
-                        git add .
-                        git commit -m "Update application version to ${VERSION_TAG}"
-                        git push origin main
-                    '''
-                    
+                            cat gitops/charts/application/Chart.yaml
+
+                            # Commit and push
+                            git add .
+                            git commit -m "Update application version to ${VERSION_TAG}"
+                            git push origin main
+                        '''
+                    }
                 }
             }
         }
