@@ -138,8 +138,8 @@ pipeline {
                     '''
                 }
 
-                sh 'docker compose down -v'
                 sh 'docker compose stop'
+                sh 'docker compose rm -f'
 
                 // sh 'docker compose down'
             }
