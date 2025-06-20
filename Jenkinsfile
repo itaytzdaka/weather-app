@@ -225,8 +225,9 @@ pipeline {
                     )]) {
                         sh '''#!/bin/bash
 
-                            git config user.name "Jenkins"
-                            git config user.email "jenkins@example.com"
+                            # Use the GitHub token to authenticate
+                            REPO_URL="https://${GITHUB_TOKEN}@${GITHUB_REPOSITORY_APP}"
+                            git remote set-url origin "$REPO_URL"
 
                             # Update the image tag in values.yaml (example path)
                             sed -i 's/^appVersion:.*$/appVersion: "'${VERSION_TAG}'"/' gitops/charts/application/Chart.yaml
@@ -236,7 +237,7 @@ pipeline {
                             # Commit and push
                             git add .
                             git commit -m "Update application version to ${VERSION_TAG}"
-                            git push origin main
+                            git push origin HEAD:main
                         '''
                     }
                 }
