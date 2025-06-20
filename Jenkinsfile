@@ -79,6 +79,32 @@ pipeline {
     //         }
     //     }
 
+
+
+        stage("Build") {
+            when {
+                anyOf {
+                    branch 'main'
+                }
+            } 
+            steps {
+                script {
+                    parallel(
+                        client: {
+                            dir('client') {
+                                sh 'docker build -t weather-client .'
+                            }
+                        },
+                        server: {
+                            dir('server') {
+                                sh 'docker build -t weather-server .'
+                            }
+                        }
+                    )
+                }
+            }
+        }
+
         stage('E2E Tests') {
             when {
                 anyOf {
@@ -113,30 +139,9 @@ pipeline {
                 }
 
                 sh 'docker compose down -v'
-            }
-        }
+                sh 'docker compose stop'
 
-        stage("Build") {
-            when {
-                anyOf {
-                    branch 'main'
-                }
-            } 
-            steps {
-                script {
-                    parallel(
-                        client: {
-                            dir('client') {
-                                sh 'docker build -t weather-client .'
-                            }
-                        },
-                        server: {
-                            dir('server') {
-                                sh 'docker build -t weather-server .'
-                            }
-                        }
-                    )
-                }
+                // sh 'docker compose down'
             }
         }
 

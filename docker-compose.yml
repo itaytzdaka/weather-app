@@ -4,6 +4,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    image: weather-server
     container_name: server
     ports:
       - "3000"
@@ -14,6 +15,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
+    image: weather-client
     container_name: client
     ports:
       - "80"
@@ -24,6 +26,7 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
+    image: weather-nginx
     container_name: nginx
     ports:
       - "80:80"
