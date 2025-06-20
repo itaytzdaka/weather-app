@@ -10,7 +10,6 @@ pipeline {
     environment {
 
         GITHUB_REPOSITORY_APP = "github.com/itaytzdaka/weather-app.git"
-        // GITLAB_REPOSITORY_GITOPS = "gitlab.com/itaytzdaka/gitops.git"
 
         ECR_REGISTRY = "054037125849.dkr.ecr.us-east-1.amazonaws.com"
         ECR_REPOSITORY_CLIENT = "weather/client"
@@ -80,45 +79,42 @@ pipeline {
     //         }
     //     }
 
-    //     stage('E2E Tests') {
-    //         when {
-    //             anyOf {
-    //                 branch 'main'
-    //                 expression { env.BRANCH_NAME.startsWith("feature/") }
-    //             }
-    //         } 
-    //         steps {
+        stage('E2E Tests') {
+            when {
+                anyOf {
+                    branch 'main'
+                    expression { env.BRANCH_NAME.startsWith("feature/") }
+                }
+            } 
+            steps {
 
-    //             sh 'docker compose up -d --build'
+                sh 'docker compose up -d --build'
                 
-    //             echo "⏳ Waiting for app to be ready..."
+                echo "⏳ Waiting for app to be ready..."
 
-    //             sh 'docker ps'
+                sh 'docker ps'
 
-    //             sh """
-    //                 for i in \$(seq 1 20); do
-    //                     if curl -sf http://frontend:80/ > /dev/null; then
-    //                         echo "✅ App is up!"
-    //                         break
-    //                     else
-    //                         echo "⏳ Attempt \$i failed, retrying..."
-    //                     fi
-    //                     sleep 2
-    //                 done
-    //             """
+                sh """
+                    for i in \$(seq 1 20); do
+                        if curl -sf http://nginx:80/ > /dev/null; then
+                            echo "✅ App is up!"
+                            break
+                        else
+                            echo "⏳ Attempt \$i failed, retrying..."
+                        fi
+                        sleep 2
+                    done
+                """
 
-    //             dir('e2e-tests') {
-    //                 sh '''
-    //                     python3 -m venv venv
-    //                     . venv/bin/activate
-    //                     pip install -r requirements.txt
-    //                     PYTHONPATH=. python e2e_tests.py
-    //                 '''
-    //             }
+                dir('e2e') {
+                    sh '''
+                        ./e2e-test.sh
+                    '''
+                }
 
-    //             sh 'docker compose down -v'
-    //         }
-    //     }
+                sh 'docker compose down -v'
+            }
+        }
 
         stage("Build") {
             when {
@@ -218,36 +214,6 @@ pipeline {
         }
 
 
-        // stage('tag') {
-        //     when {
-        //         branch 'main'
-        //     } 
-        //     steps {
-        //         script {
-        //                 gitlabCommitStatus(name: 'Tag'){
-        //                     withCredentials([usernamePassword(
-        //                     credentialsId: 'jenkins-versions-gitlab',
-        //                     usernameVariable: 'GIT_USER',
-        //                     passwordVariable: 'GIT_PASSWORD'
-        //                 )]) {
-
-        //                     sh '''#!/bin/bash
-        //                         git config user.name "Jenkins"
-        //                         git config user.email "jenkins@example.com"
-                                
-        //                         REPO_URL="https://${GIT_USER}:${GIT_PASSWORD}@${GITLAB_REPOSITORY_APP}"
-        //                         git remote set-url origin "$REPO_URL"
-
-        //                         echo "Creating tag: $VERSION_TAG"
-        //                         git tag "$VERSION_TAG"
-        //                         git push origin "$VERSION_TAG"
-        //                     '''
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
         stage('tag') {
             when {
                 branch 'main'
@@ -322,6 +288,34 @@ pipeline {
     //         }
     //     }
 
+        stage("Deploy") {
+            when {
+                anyOf {
+                    branch 'main'
+                }
+            }
+            steps {
+                script {
+                        
+                    sh '''#!/bin/bash
+
+                        git config user.name "Jenkins"
+                        git config user.email "jenkins@example.com"
+
+                        # Update the image tag in values.yaml (example path)
+                        sed -i 's/^appVersion:.*$/appVersion: "'${VERSION_TAG}'"/' charts/application/Chart.yaml
+
+                        cat charts/application/Chart.yaml
+
+                        # Commit and push
+                        git add .
+                        git commit -m "Update application version to ${VERSION_TAG}"
+                        git push origin main
+                    '''
+                    
+                }
+            }
+        }
 
     // }
 
