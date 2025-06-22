@@ -102,7 +102,7 @@ ingress:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
   className: nginx
   hosts:
-    - host: itay-weather.ddns.net	
+    - host: weather.local
       paths:
         - path: /
           pathType: Prefix
@@ -117,7 +117,7 @@ ingress:
   tls:
    - secretName: weather-tls 
      hosts:
-       - itay-weather.ddns.net	
+       - weather.local
 
 
 clusterIssuer:

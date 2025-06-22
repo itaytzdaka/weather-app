@@ -2,9 +2,9 @@ apiVersion: v1
 kind: Service
 
 metadata:
-  name: todos-server-service
+  name: weather-server-service
   labels:
-    app: todos
+    app: weather
 
 spec:
   ports:
