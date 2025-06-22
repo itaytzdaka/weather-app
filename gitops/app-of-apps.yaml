@@ -10,9 +10,9 @@ spec:
   project: default
 
   source:
-    repoURL: git@gitlab.com:itay-protfolio/gitops.git
+    repoURL: https://github.com/itaytzdaka/weather-app.git
     targetRevision: main
-    path: argo-apps
+    path: gitops/argo-apps
     directory:
       recurse: true
 
