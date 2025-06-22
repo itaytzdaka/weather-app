@@ -3,7 +3,8 @@ client:
   replicaCount: 2
 
   image:
-    repository: 054037125849.dkr.ecr.us-east-1.amazonaws.com/weather/client
+    # repository: 054037125849.dkr.ecr.us-east-1.amazonaws.com/weather/client
+    repository: itaytz1/weather-client
 
   service:
     port: 80
@@ -49,7 +50,8 @@ server:
   replicaCount: 2
 
   image:
-    repository: 054037125849.dkr.ecr.us-east-1.amazonaws.com/weather/server
+    # repository: 054037125849.dkr.ecr.us-east-1.amazonaws.com/weather/server
+    repository: itaytz1/weather-server
 
   service:
     port: 5000
