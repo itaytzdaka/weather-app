@@ -96,35 +96,35 @@ server:
 
 
 
-# ingress:
-#   enabled: true
-#   annotations: 
-#     cert-manager.io/cluster-issuer: letsencrypt
-#     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-#   className: nginx
-#   hosts:
-#     - host: itay-protfolio.ddns.net	
-#       paths:
-#         - path: /
-#           pathType: Prefix
-#           service:
-#             name: todos-client-service
-#             port: 80
-#         - path: /api
-#           pathType: Prefix
-#           service:
-#             name: todos-server-service
-#             port: 5000
-#   tls:
-#    - secretName: todos-tls 
-#      hosts:
-#        - itay-protfolio.ddns.net	
+ingress:
+  enabled: true
+  annotations: 
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  className: nginx
+  hosts:
+    - host: itay-protfolio.ddns.net	
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: weather-client-service
+            port: 80
+        - path: /api
+          pathType: Prefix
+          service:
+            name: weather-server-service
+            port: 5000
+  tls:
+   - secretName: weather-tls 
+     hosts:
+       - itay-weather.ddns.net	
 
-# clusterIssuer:
-#   enabled: true
-#   name: letsencrypt
-#   acme:
-#     server: https://acme-v02.api.letsencrypt.org/directory
-#     email: itaytzdaka1@gmail.com
-#     privateKeySecretRef: letsencrypt-key
-#     ingressClass: nginx
+clusterIssuer:
+  enabled: true
+  name: letsencrypt
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: itaytzdaka1@gmail.com
+    privateKeySecretRef: letsencrypt-key
+    ingressClass: nginx
