@@ -113,7 +113,7 @@ ingress:
           pathType: Prefix
           service:
             name: weather-server-service
-            port: 5000
+            port: 3000
   tls:
    - secretName: weather-tls 
      hosts:
