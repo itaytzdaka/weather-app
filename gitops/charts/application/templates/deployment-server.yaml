@@ -52,14 +52,14 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
 
-          env:
-            - name: DB_PRIMARY_HOST
-              value: application-postgresql-primary
-            - name: DB_REPLICA_HOST
-              value: application-postgresql-read
-            - name: DB_NAME
-              value: {{ .Values.postgresql.auth.database }}
-            - name: DB_USER
-              value: {{ .Values.postgresql.auth.username }}
-            - name: DB_PASS
-              value: {{ .Values.postgresql.auth.password }}
+          # env:
+          #   - name: DB_PRIMARY_HOST
+          #     value: application-postgresql-primary
+          #   - name: DB_REPLICA_HOST
+          #     value: application-postgresql-read
+          #   - name: DB_NAME
+          #     value: {{ .Values.postgresql.auth.database }}
+          #   - name: DB_USER
+          #     value: {{ .Values.postgresql.auth.username }}
+          #   - name: DB_PASS
+          #     value: {{ .Values.postgresql.auth.password }}
