@@ -143,31 +143,31 @@ resource "kubectl_manifest" "argocd_application" {
 }
 
 
-resource "kubernetes_secret" "argocd_git_repo" {
-  metadata {
-    name      = var.argocd_repo_secret_name
-    namespace = var.namespace
+# resource "kubernetes_secret" "argocd_git_repo" {
+#   metadata {
+#     name      = var.argocd_repo_secret_name
+#     namespace = var.namespace
 
-    annotations = {
-      "managed-by" = "argocd.argoproj.io"
-    }
+#     annotations = {
+#       "managed-by" = "argocd.argoproj.io"
+#     }
 
-    labels = {
-      "argocd.argoproj.io/secret-type" = "repository"
-    }
-  }
+#     labels = {
+#       "argocd.argoproj.io/secret-type" = "repository"
+#     }
+#   }
   
 
-  data = {
-    type          = "git"
-    url           = var.argocd_git_repo_url
-    project       = "default"
-    sshPrivateKey = var.ssh_private_key
-  }
+#   data = {
+#     type          = "git"
+#     url           = var.argocd_git_repo_url
+#     project       = "default"
+#     sshPrivateKey = var.ssh_private_key
+#   }
 
-  type = "Opaque"
+#   type = "Opaque"
 
-  depends_on = [helm_release.argocd]
+#   depends_on = [helm_release.argocd]
 
 
-}
+# }

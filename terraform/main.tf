@@ -6,12 +6,17 @@ terraform {
       source  = "gavinbunney/kubectl"
       version = "~> 1.14.0"
     }
+
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2.17"
+    }
   }
 
   backend "s3" {
-    bucket       = "terraform"
+    bucket       = "weather-terraform"
     key          = "terraform.tfstate"
-    region       = "ap-south-1"
+    region       = "us-east-1"
     use_lockfile = true
   }
 }
@@ -69,11 +74,11 @@ module "argocd" {
 
   namespace                = var.argocd_namespace
   chart_version            = var.argocd_chart_version
-  argocd_git_repo_url      = var.argocd_git_repo_url
-  argocd_application_name  = var.argocd_application_name
-  argocd_git_repo_path     = var.argocd_git_repo_path
-  argocd_repo_secret_name  = var.argocd_repo_secret_name
+  # argocd_git_repo_url      = var.argocd_git_repo_url
+  # argocd_application_name  = var.argocd_application_name
+  # argocd_git_repo_path     = var.argocd_git_repo_path
+  # argocd_repo_secret_name  = var.argocd_repo_secret_name
 
-  ssh_private_key          = local.ssh_private_key
+  # ssh_private_key          = local.ssh_private_key
 
 }

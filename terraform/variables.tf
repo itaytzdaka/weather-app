@@ -131,25 +131,25 @@ variable "argocd_chart_version" {
   type = string
 }
 
-variable "argocd_application_name" {
-  description = "The name of the ArgoCD root application"
-  type        = string
-}
+# variable "argocd_application_name" {
+#   description = "The name of the ArgoCD root application"
+#   type        = string
+# }
 
-variable "argocd_git_repo_url" {
-  description = "Git SSH URL for ArgoCD to sync applications"
-  type        = string
-}
+# variable "argocd_git_repo_url" {
+#   description = "Git SSH URL for ArgoCD to sync applications"
+#   type        = string
+# }
 
-variable "argocd_git_repo_path" {
-  description = "Path in the Git repo to ArgoCD application definitions"
-  type        = string
-}
+# variable "argocd_git_repo_path" {
+#   description = "Path in the Git repo to ArgoCD application definitions"
+#   type        = string
+# }
 
-variable "argocd_repo_secret_name" {
-  description = "Kubernetes secret name for the ArgoCD Git repo credentials"
-  type        = string
-}
+# variable "argocd_repo_secret_name" {
+#   description = "Kubernetes secret name for the ArgoCD Git repo credentials"
+#   type        = string
+# }
 
 variable "tags" {
   description = "Tags to apply to resources"

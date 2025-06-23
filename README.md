@@ -163,7 +163,7 @@ Follow these instructions to set up the project locally and deploy it to your cl
 
 $ cd infrastructure
 $ terraform init -reconfigure
-$ terraform workspace new prod / terraform workspace select prod 
+$ terraform workspace new prod
 
 ### Application Deployment
 
