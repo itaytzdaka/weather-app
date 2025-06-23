@@ -34,6 +34,7 @@ module "network" {
 module "eks" {
   source                      = "./modules/eks"
 
+  region                      = var.region
   cluster_name                = var.cluster_name
   subnet_ids                  = values(module.network.subnet_ids)
   vpc_id                      = module.network.vpc_id
@@ -74,10 +75,10 @@ module "argocd" {
 
   namespace                = var.argocd_namespace
   chart_version            = var.argocd_chart_version
-  # argocd_git_repo_url      = var.argocd_git_repo_url
+  argocd_git_repo_url      = var.argocd_git_repo_url
   # argocd_application_name  = var.argocd_application_name
   # argocd_git_repo_path     = var.argocd_git_repo_path
-  # argocd_repo_secret_name  = var.argocd_repo_secret_name
+  argocd_repo_secret_name  = var.argocd_repo_secret_name
 
   # ssh_private_key          = local.ssh_private_key
 

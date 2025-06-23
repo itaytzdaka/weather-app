@@ -1,5 +1,5 @@
 output "vpc_id" {
-  value = aws_vpc.TODO-vpc.id
+  value = aws_vpc.weather-vpc.id
 }
 
 output "subnet_ids" {

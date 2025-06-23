@@ -322,7 +322,7 @@ resource "null_resource" "apply_aws_auth" {
 
   provisioner "local-exec" {
     command = <<EOT
-      aws eks update-kubeconfig --region ap-south-1 --name ${aws_eks_cluster.cluster.name}
+      aws eks update-kubeconfig --region ${var.region} --name ${aws_eks_cluster.cluster.name}
     EOT
   }
 }

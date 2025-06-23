@@ -1,8 +1,8 @@
-resource "aws_vpc" "TODO-vpc" {
+resource "aws_vpc" "weather-vpc" {
   cidr_block = var.vpc_cidr
 
   tags = merge(var.tags, {
-    Name = "TODO-vpc"
+    Name = "weather-vpc"
   })
 }
 
@@ -10,7 +10,7 @@ resource "aws_subnet" "subnets" {
   
   for_each = var.subnets 
 
-  vpc_id            = aws_vpc.TODO-vpc.id
+  vpc_id            = aws_vpc.weather-vpc.id
   cidr_block        = each.value.cidr_block
   availability_zone = each.value.availability_zone
   map_public_ip_on_launch = true
@@ -25,24 +25,24 @@ resource "aws_subnet" "subnets" {
 }
 
 
-resource "aws_internet_gateway" "TODO-igw" {
-  vpc_id = aws_vpc.TODO-vpc.id
+resource "aws_internet_gateway" "weather-igw" {
+  vpc_id = aws_vpc.weather-vpc.id
 
   tags = merge(var.tags, {
-    Name = "TODO-igw"
+    Name = "weather-igw"
   })
 }
 
-resource "aws_route_table" "TODO-pub-rtb" {
-  vpc_id = aws_vpc.TODO-vpc.id
+resource "aws_route_table" "weather-pub-rtb" {
+  vpc_id = aws_vpc.weather-vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.TODO-igw.id
+    gateway_id = aws_internet_gateway.weather-igw.id
   }
 
   tags = merge(var.tags, {
-    Name = "TODO-pub-rtb"
+    Name = "weather-pub-rtb"
   })
 }
 
@@ -50,5 +50,5 @@ resource "aws_route_table_association" "route_table_associations" {
   for_each = aws_subnet.subnets
 
   subnet_id = each.value.id
-  route_table_id = aws_route_table.TODO-pub-rtb.id
+  route_table_id = aws_route_table.weather-pub-rtb.id
 }

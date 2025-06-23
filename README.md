@@ -132,9 +132,9 @@ $ kubectl port-forward svc/argocd-server -n argocd 8080:443
 
 $ kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 --decode
 
+$ minikube tunnel
 
-$ cd weather
-$ cd gitops
+$ cd weather/gitops
 
 $ kubectl apply -f app-of-apps.yaml
 

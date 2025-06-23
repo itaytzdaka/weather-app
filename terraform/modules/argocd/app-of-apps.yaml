@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/itaytzdaka/weather-app.git
     targetRevision: main
-    path: gitops/argo-apps
+    path: gitops/envs/prod
     directory:
       recurse: true
 
