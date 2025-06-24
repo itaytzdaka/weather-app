@@ -277,6 +277,14 @@ resource "aws_security_group" "eks_nodes_sg" {
     self        = true
   }
 
+  ingress {
+    description = "Allow HTTP traffic"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   # Allow service/webhook traffic on port 443 (e.g., validating webhooks)
   ingress {
     description = "Allow internal service/webhook traffic (TCP 443)"
