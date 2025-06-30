@@ -73,6 +73,8 @@ module "argocd" {
     kubectl = kubectl.gavin
   }
 
+  eks_dependency = module.eks
+
   namespace                = var.argocd_namespace
   chart_version            = var.argocd_chart_version
   argocd_git_repo_url      = var.argocd_git_repo_url

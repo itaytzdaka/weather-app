@@ -1,3 +1,8 @@
+variable "eks_dependency" {
+  description = "Used to enforce dependency on EKS"
+  type        = any
+}
+
 variable "namespace" {
   description = "Namespace to deploy Argo CD"
   type        = string

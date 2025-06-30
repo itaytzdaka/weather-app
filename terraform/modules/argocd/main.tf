@@ -17,86 +17,8 @@ resource "helm_release" "argocd" {
 
   create_namespace = true
 
-  # values = [
-  #   yamlencode({
-  #     extraObjects = [
-  #       {
-  #         apiVersion = "argoproj.io/v1alpha1"
-  #         kind       = "Application"
-  #         metadata = {
-  #           name      = var.argocd_application_name
-  #           namespace = var.namespace
-  #         }
-  #         spec = {
-  #           project = "default"
-  #           source = {
-  #             repoURL        = var.argocd_git_repo_url
-  #             targetRevision = "main"
-  #             path           = var.argocd_git_repo_path
-  #             directory = {
-  #               recurse = true
-  #             }
-  #           }
-  #           destination = {
-  #             server    = "https://kubernetes.default.svc"
-  #             namespace = var.namespace
-  #           }
-  #           syncPolicy = {
-  #             automated = {
-  #               prune    = true
-  #               selfHeal = true
-  #             }
-  #           }
-  #         }
-  #       }
-  #     ]
-  #   })
-  # ]
-
-  # values = [
-  #   yamlencode({
-  #     crds = {
-  #       install = true
-  #     }
-
-  #     # configs = {
-  #     #   repositories = {
-  #     #     gitops-repo = {
-  #     #       url  = var.argocd_git_repo_url
-  #     #       type = "git"
-  #     #       name = "gitops-repo"
-  #     #       sshPrivateKeySecret = var.argocd_repo_secret_name
-  #     #     }
-  #     #   }
-  #     # }
-
-  #     applications = [
-  #       {
-  #         name      = var.argocd_application_name
-  #         namespace = var.namespace
-  #         project   = "default"
-  #         source = {
-  #           repoURL        = var.argocd_git_repo_url
-  #           targetRevision = "main"
-  #           path           = var.argocd_git_repo_path
-  #           directory = {
-  #             recurse = true
-  #           }
-  #         }
-  #         destination = {
-  #           server    = "https://kubernetes.default.svc"
-  #           namespace = var.namespace
-  #         }
-  #         syncPolicy = {
-  #           automated = {
-  #             prune    = true
-  #             selfHeal = true
-  #           }
-  #         }
-  #       }
-  #     ]
-  #   })
-  # ]
+  # Add explicit dependency on EKS
+  depends_on = [var.eks_dependency]
 
 }
 
