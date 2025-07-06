@@ -278,97 +278,20 @@ resource "aws_security_group" "eks_nodes_sg" {
   }
 
   ingress {
-    description = "Allow HTTP traffic"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # ingress {
-  #   description = "Allow HTTP traffic"
-  #   from_port   = 80
-  #   to_port     = 80
-  #   protocol    = "udp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-
-  # # Allow service/webhook traffic on port 443 (e.g., validating webhooks)
-  # ingress {
-  #   description = "Allow internal service/webhook traffic (TCP 443)"
-  #   from_port   = 443
-  #   to_port     = 443
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-
-  ingress {
-    description = "Allow internal service/webhook traffic (TCP 443)"
+    description = "Allow webhook traffic from control plane"
     from_port   = 8443
     to_port     = 8443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  # Allow service/webhook traffic on port 443 (e.g., validating webhooks)
-  # ingress {
-  #   description = "Allow internal service/webhook traffic (TCP 443)"
-  #   from_port   = 443
-  #   to_port     = 443
-  #   protocol    = "udp"
-  #   cidr_blocks = ["0.0.0.0/16"]
-  # }
-
-  # Allow kubelet webhook traffic (required for webhooks and kubectl exec)
   ingress {
-    description     = "Allow webhook/kubelet traffic from control plane"
+    description     = "Allow kubelet traffic from control plane"
     from_port       = 10250
     to_port         = 10250
     protocol        = "tcp"
     cidr_blocks = ["10.0.0.0/16"]
   }
-
-  # ingress {
-  #   description = "Allow DNS TCP traffic from control plane"
-  #   from_port   = 53
-  #   to_port     = 53
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["10.0.0.0/16"]
-  # }
-
-  # Allow DNS (UDP 53) — required for webhook services to resolve (e.g., cert-manager-webhook.svc)
-  # ingress {
-  #   description     = "Allow DNS UDP traffic from control plane"
-  #   from_port       = 53
-  #   to_port         = 53
-  #   protocol        = "udp"
-  #   cidr_blocks = ["10.0.0.0/16"]
-  # }
-
-  # Ingress for fixed NodePorts
-  # ingress {
-  #   description = "Allow ELB to reach ingress-nginx HTTP NodePort"
-  #   from_port   = 32029
-  #   to_port     = 32029
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-
-  # ingress {
-  #   description = "Allow ELB to reach ingress-nginx HTTPS NodePort"
-  #   from_port   = 31282
-  #   to_port     = 31282
-  #   protocol    = "tcp"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
-
-  # ingress {
-  #   description = "TEMP: Allow all inbound for testing"
-  #   from_port   = 0
-  #   to_port     = 0
-  #   protocol    = "-1"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  # }
 
   egress {
     from_port   = 0
